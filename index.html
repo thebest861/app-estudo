@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>App Estudo PRO</title>
+<title>App Estudo</title>
 
 <style>
 body{
@@ -10,7 +10,6 @@ body{
     background: linear-gradient(135deg,#3b82f6,#22c55e);
     padding:20px;
 }
-
 .container{
     max-width:700px;
     margin:auto;
@@ -18,32 +17,19 @@ body{
     padding:20px;
     border-radius:20px;
 }
-
 button, select{
     width:100%;
     padding:12px;
     margin-top:10px;
     border:none;
     border-radius:10px;
-    font-size:16px;
 }
-
 button{
     background:#22c55e;
     color:white;
-    cursor:pointer;
 }
-
 .questao{
     margin-top:15px;
-    padding:10px;
-    border:1px solid #ddd;
-    border-radius:10px;
-}
-
-.explicacao{
-    margin-top:5px;
-    font-weight:bold;
 }
 </style>
 </head>
@@ -52,7 +38,7 @@ button{
 
 <div class="container">
 
-<h2>📚 App de Estudo PRO</h2>
+<h2>📚 App de Estudo</h2>
 
 <select id="materia">
 <option value="portugues">Português</option>
@@ -70,109 +56,101 @@ button{
 
 <script>
 
-let usadas = [];
-let qstore = {};
-
 // 🔊 VOZ
-function falar(texto){
-let msg = new SpeechSynthesisUtterance(texto);
-msg.lang = "pt-BR";
+function falar(txt){
+let msg = new SpeechSynthesisUtterance(txt);
+msg.lang="pt-BR";
 speechSynthesis.speak(msg);
 }
 
 // EMBARALHAR
-function shuffle(arr){
-for(let i=arr.length-1;i>0;i--){
+function embaralhar(array){
+for(let i=array.length-1;i>0;i--){
 let j=Math.floor(Math.random()*(i+1));
-[arr[i],arr[j]]=[arr[j],arr[i]];
+[array[i],array[j]]=[array[j],array[i]];
 }
-return arr;
+return array;
 }
 
 // GERAR QUESTÃO
 function gerarQuestao(materia){
 
-let pergunta, op, correta, explicacao, chave;
+let pergunta, alternativas, correta, explicacao;
 
 // PORTUGUÊS
-if(materia=="portugues"){
+if(materia==="portugues"){
 
 let banco = [
-
-{p:"Na frase 'Ele é uma fera estudando', o sentido é:",o:["Real","Figurado","Formal","Informal"],c:1,e:"Fera quer dizer muito bom."},
-{p:"Qual é um substantivo?",o:["Correr","Casa","Bonito","Rápido"],c:1,e:"Casa é nome de coisa."},
-{p:"Qual é um adjetivo?",o:["Casa","Bonito","Correr","Mesa"],c:1,e:"Adjetivo é característica."},
-{p:"Qual está correto?",o:["Os menino feliz","Os meninos felizes","Menino felizes","Os menino felizs"],c:1,e:"Plural combina com plural."}
-
+["Na frase 'Ele é uma fera estudando', o sentido é:",["Real","Figurado","Formal","Informal"],1,"Fera quer dizer muito bom."],
+["Qual é um substantivo?",["Correr","Casa","Bonito","Rápido"],1,"Casa é nome de coisa."],
+["Qual é um adjetivo?",["Casa","Bonito","Correr","Mesa"],1,"Adjetivo é característica."],
+["Qual está correto?",["Os menino feliz","Os meninos felizes","Menino felizes","Os menino felizs"],1,"Plural combina com plural."]
 ];
 
 let q = banco[Math.floor(Math.random()*banco.length)];
-pergunta=q.p; op=q.o; correta=q.c; explicacao=q.e;
-chave = pergunta;
 
+pergunta = q[0];
+alternativas = q[1];
+correta = q[2];
+explicacao = q[3];
 }
 
 // MATEMÁTICA
-if(materia=="matematica"){
-
-let a = Math.floor(Math.random()*50);
-let b = Math.floor(Math.random()*50);
-let r = a+b;
+if(materia==="matematica"){
+let a=Math.floor(Math.random()*50);
+let b=Math.floor(Math.random()*50);
+let r=a+b;
 
 pergunta = a+" + "+b+" = ?";
-op = [r-1,r,r+1,r+2];
+alternativas = [r-1,r,r+1,r+2];
 correta = 1;
 explicacao = a+" + "+b+" = "+r;
-
-chave = pergunta;
-
 }
 
-// CIÊNCIAS
-if(materia=="ciencias"){
+// OUTRAS
+if(materia==="ciencias"){
 pergunta="A rotação da Terra causa:";
-op=["Dia e noite","Chuva","Vento","Lua"];
+alternativas=["Dia e noite","Chuva","Vento","Lua"];
 correta=0;
-explicacao="A Terra gira e temos dia e noite.";
-chave=pergunta;
+explicacao="A Terra gira → dia e noite.";
 }
 
-// HISTÓRIA
-if(materia=="historia"){
+if(materia==="historia"){
 pergunta="Os povos nômades:";
-op=["Mudam de lugar","Cidade","Estado","Indústria"];
+alternativas=["Mudam de lugar","Cidade","Estado","Indústria"];
 correta=0;
 explicacao="Eles mudavam de lugar.";
-chave=pergunta;
 }
 
-// GEOGRAFIA
-if(materia=="geografia"){
+if(materia==="geografia"){
 pergunta="Desigualdade territorial é:";
-op=["Diferença","Igualdade","Clima","Solo"];
+alternativas=["Diferença","Igualdade","Clima","Solo"];
 correta=0;
 explicacao="São diferenças.";
-chave=pergunta;
 }
 
-// EVITAR REPETIR
-if(usadas.includes(chave)) return gerarQuestao(materia);
-usadas.push(chave);
+// 🔥 EMBARALHAR CORRETAMENTE
+let op = alternativas.map((v,i)=>({txt:v,correta:i===correta}));
+op = embaralhar(op);
 
-// EMBARALHAR RESPOSTAS
-let respostas = op.map((v,i)=>({txt:v,correta:i==correta}));
-respostas = shuffle(respostas);
-let novaCorreta = respostas.findIndex(r=>r.correta);
+// descobrir nova posição correta
+let novaCorreta = op.findIndex(x=>x.correta);
 
-return {pergunta,respostas,correta:novaCorreta,explicacao};
+return {
+pergunta:pergunta,
+op:op,
+correta:novaCorreta,
+explicacao:explicacao
+};
 
 }
 
 // GERAR PROVA
+let bancoQuestoes = [];
+
 function gerarProva(){
 
-usadas = [];
-qstore = {};
+bancoQuestoes = [];
 
 let materia = document.getElementById("materia").value;
 let html = "";
@@ -180,26 +158,23 @@ let html = "";
 for(let i=1;i<=10;i++){
 
 let q = gerarQuestao(materia);
-
-qstore[i]=q;
+bancoQuestoes.push(q);
 
 html += `<div class="questao">
 <b>${i}. ${q.pergunta}</b><br>`;
 
-q.respostas.forEach((r,index)=>{
+q.op.forEach((alt,index)=>{
 html += `<label>
-<input type="radio" name="q${i}" value="${index}"> ${r.txt}
+<input type="radio" name="q${i}" value="${index}"> ${alt.txt}
 </label><br>`;
 });
 
-html += `<div id="exp${i}" class="explicacao"></div></div>`;
-
+html += `<div id="exp${i}"></div></div>`;
 }
 
 html += `<button onclick="corrigir()">Corrigir</button>`;
 
 document.getElementById("area").innerHTML = html;
-
 }
 
 // CORRIGIR
@@ -210,18 +185,16 @@ let acertos = 0;
 for(let i=1;i<=10;i++){
 
 let marcada = document.querySelector(`input[name=q${i}]:checked`);
-let q = qstore[i];
+let q = bancoQuestoes[i-1];
 let exp = document.getElementById("exp"+i);
 
-if(marcada && parseInt(marcada.value)==q.correta){
+if(marcada && parseInt(marcada.value)===q.correta){
 acertos++;
-exp.innerHTML="✅ Acertou!";
+exp.innerHTML="✅ Acertou";
 exp.style.color="green";
 }else{
-exp.innerHTML="❌ " + q.explicacao;
+exp.innerHTML="❌ "+q.explicacao;
 exp.style.color="red";
-
-// 🔊 FALA A EXPLICAÇÃO
 falar(q.explicacao);
 }
 
