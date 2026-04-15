@@ -2,45 +2,45 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>App de Estudo</title>
+<title>App IA Estudo</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 body {
     font-family: Arial;
-    background: linear-gradient(to right, #38bdf8, #22c55e);
-    padding: 20px;
-    text-align: center;
+    background: linear-gradient(135deg,#3b82f6,#22c55e);
+    padding:20px;
 }
 
 .container {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    max-width: 600px;
-    margin: auto;
+    max-width:600px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    text-align:center;
 }
 
 button {
-    margin-top: 10px;
-    padding: 12px;
-    width: 100%;
-    font-size: 16px;
-    background: #22c55e;
-    border: none;
-    color: white;
-    border-radius: 10px;
-    cursor: pointer;
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:#22c55e;
+    color:white;
+    cursor:pointer;
 }
 
-button:hover {
-    background: #16a34a;
+.nivel {
+    font-weight:bold;
+    margin-bottom:10px;
 }
 
 .explicacao {
-    margin-top: 10px;
-    font-size: 14px;
+    margin-top:10px;
 }
-
 </style>
 </head>
 
@@ -48,10 +48,11 @@ button:hover {
 
 <div class="container">
 
-<h2>📚 App de Estudo</h2>
+<h2>🤖 App Inteligente</h2>
 
-<select id="materia" onchange="carregarAssuntos()">
-<option value="">Escolha a matéria</option>
+<div class="nivel" id="nivel">Nível 1</div>
+
+<select id="materia">
 <option value="portugues">Português</option>
 <option value="matematica">Matemática</option>
 <option value="ciencias">Ciências</option>
@@ -59,110 +60,65 @@ button:hover {
 <option value="geografia">Geografia</option>
 </select>
 
-<select id="assunto"></select>
-
-<button onclick="gerar()">GERAR QUESTÃO</button>
+<button onclick="nova()">Nova Questão</button>
 
 <div id="area"></div>
+
+<canvas id="grafico"></canvas>
 
 </div>
 
 <script>
 
-function rand(max){ return Math.floor(Math.random()*max); }
+let nivel = 1;
+let acertos = 0;
+let erros = {portugues:0, matematica:0, ciencias:0, historia:0, geografia:0};
 
-// CARREGAR ASSUNTOS
-function carregarAssuntos(){
-
-let materia = document.getElementById("materia").value;
-let assunto = document.getElementById("assunto");
-
-let lista = [];
-
-if(materia=="portugues"){
-lista = ["sentido","substantivo","concordancia"];
+// 🔊 VOZ
+function falar(txt){
+let fala = new SpeechSynthesisUtterance(txt);
+fala.lang="pt-BR";
+speechSynthesis.speak(fala);
 }
 
+// 🎲 IA SIMULADA
+function gerarQuestao(){
+
+let materia = document.getElementById("materia").value;
+
+let pergunta, op, correta, explicacao;
+
+// MATEMÁTICA (fica mais difícil com nível)
 if(materia=="matematica"){
-lista = ["soma","subtracao"];
+
+let max = nivel * 20;
+
+let a = Math.floor(Math.random()*max);
+let b = Math.floor(Math.random()*max);
+
+let r = a+b;
+
+pergunta=`Quanto é ${a} + ${b}?`;
+op=[r-1,r,r+1,r+2];
+correta=1;
+explicacao=`Somando ${a} + ${b} = ${r}`;
 }
 
-if(materia=="ciencias"){
-lista = ["terra"];
-}
-
-if(materia=="historia"){
-lista = ["nomadismo"];
-}
-
-if(materia=="geografia"){
-lista = ["desigualdade"];
-}
-
-assunto.innerHTML = "";
-
-lista.forEach(a=>{
-assunto.innerHTML += `<option value="${a}">${a}</option>`;
-});
-
-}
-
-// GERAR QUESTÃO
-function gerar(){
-
-let materia = document.getElementById("materia").value;
-let assunto = document.getElementById("assunto").value;
-
-let pergunta="", op=[], correta=0, explicacao="";
-
-// PORTUGUÊS
+// PORTUGUÊS (variações)
 if(materia=="portugues"){
 
-if(assunto=="sentido"){
-pergunta="Na frase 'Ele é uma fera estudando', o sentido é:";
+let frases = [
+"Ele é uma fera estudando",
+"Ela voa nos estudos",
+"Ele é um gênio estudando"
+];
+
+let f = frases[Math.floor(Math.random()*frases.length)];
+
+pergunta=`Na frase "${f}", o sentido é:`;
 op=["Real","Figurado","Formal","Informal"];
 correta=1;
-explicacao="Fera aqui quer dizer que ele é muito bom!";
-}
-
-if(assunto=="substantivo"){
-pergunta="Qual é um substantivo?";
-op=["Correr","Casa","Bonito","Rápido"];
-correta=1;
-explicacao="Casa é nome de coisa.";
-}
-
-if(assunto=="concordancia"){
-pergunta="Qual está correto?";
-op=["Os menino feliz","Os meninos felizes","Menino felizes","Os menino felizs"];
-correta=1;
-explicacao="Plural combina com plural.";
-}
-
-}
-
-// MATEMÁTICA
-if(materia=="matematica"){
-
-let a = rand(20);
-let b = rand(20);
-
-if(assunto=="soma"){
-let r = a+b;
-pergunta=`${a} + ${b} = ?`;
-op=[r-1,r,r+1,r+2];
-correta=1;
-explicacao=`${a} + ${b} = ${r}`;
-}
-
-if(assunto=="subtracao"){
-let r = a-b;
-pergunta=`${a} - ${b} = ?`;
-op=[r-1,r,r+1,r+2];
-correta=1;
-explicacao=`${a} - ${b} = ${r}`;
-}
-
+explicacao="Não é literal, quer dizer muito bom!";
 }
 
 // CIÊNCIAS
@@ -170,50 +126,92 @@ if(materia=="ciencias"){
 pergunta="A Terra gira e causa:";
 op=["Dia e noite","Chuva","Vento","Lua"];
 correta=0;
-explicacao="A Terra gira e temos dia e noite.";
+explicacao="A rotação gera dia e noite.";
 }
 
 // HISTÓRIA
 if(materia=="historia"){
 pergunta="Os povos nômades:";
-op=["Mudam de lugar","Vivem em cidade","Plantam","Não viajam"];
+op=["Mudam de lugar","Cidade","Estado","Indústria"];
 correta=0;
-explicacao="Eles mudavam sempre de lugar.";
+explicacao="Eles se movimentavam.";
 }
 
 // GEOGRAFIA
 if(materia=="geografia"){
-pergunta="Desigualdade territorial é:";
-op=["Diferença entre regiões","Igualdade","Clima","Solo"];
+pergunta="Desigualdade é:";
+op=["Diferença","Igualdade","Clima","Solo"];
 correta=0;
-explicacao="Alguns lugares são mais ricos que outros.";
+explicacao="São diferenças.";
+}
+
+return {pergunta, op, correta, explicacao, materia};
+
 }
 
 // MOSTRAR
-let html = `<h3>${pergunta}</h3>`;
+function nova(){
 
-op.forEach((o,i)=>{
-html += `<button onclick="responder(${i},${correta},'${explicacao}')">${o}</button>`;
+let q = gerarQuestao();
+
+let html = `<h3>${q.pergunta}</h3>`;
+
+q.op.forEach((o,i)=>{
+html += `<button onclick="responder(${i},${q.correta},'${q.explicacao}','${q.materia}')">${o}</button>`;
 });
 
-html += `<div id="explicacao" class="explicacao"></div>`;
+html += `<div id="exp" class="explicacao"></div>`;
 
 document.getElementById("area").innerHTML = html;
 
 }
 
 // RESPONDER
-function responder(i, correta, explicacao){
+function responder(i, correta, explicacao, materia){
 
-let div = document.getElementById("explicacao");
+let exp = document.getElementById("exp");
 
 if(i==correta){
-div.innerHTML="✅ Acertou!";
-div.style.color="green";
-}else{
-div.innerHTML="❌ Errou! " + explicacao;
-div.style.color="red";
+acertos++;
+exp.innerHTML="✅ Acertou!";
+exp.style.color="green";
+
+// subir nível
+if(acertos % 5 == 0){
+nivel++;
+document.getElementById("nivel").innerHTML = "Nível " + nivel;
 }
+}else{
+exp.innerHTML="❌ " + explicacao;
+exp.style.color="red";
+erros[materia]++;
+falar(explicacao);
+}
+
+grafico();
+
+}
+
+// 📊 GRÁFICO
+function grafico(){
+
+let ctx = document.getElementById("grafico").getContext("2d");
+
+new Chart(ctx,{
+type:'bar',
+data:{
+labels:["Port","Mat","Cien","Hist","Geo"],
+datasets:[{
+data:[
+erros.portugues,
+erros.matematica,
+erros.ciencias,
+erros.historia,
+erros.geografia
+]
+}]
+}
+});
 
 }
 
