@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>App de Estudos</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(to right, #38bdf8, #22c55e);
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    max-width: 600px;
+    margin: auto;
+}
+
+button {
+    margin-top: 10px;
+    padding: 12px;
+    width: 100%;
+    font-size: 16px;
+    background: #22c55e;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #16a34a;
+}
+
+.question {
+    margin-top: 20px;
+}
+
+.explicacao {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.erro {
+    color: red;
+}
+
+.certo {
+    color: green;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>📚 App de Estudo</h2>
+
+<select id="materia">
+<option value="todos">Todas matérias</option>
+<option value="portugues">Português</option>
+<option value="matematica">Matemática</option>
+<option value="ciencias">Ciências</option>
+<option value="historia">História</option>
+<option value="geografia">Geografia</option>
+</select>
+
+<button onclick="gerar()">Nova Questão</button>
+
+<div id="area"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+function rand(max){ return Math.floor(Math.random()*max); }
+
+function gerar(){
+
+let materias = ["portugues","matematica","ciencias","historia","geografia"];
+let escolha = document.getElementById("materia").value;
+
+let materia = escolha=="todos" ? materias[rand(materias.length)] : escolha;
+
+let pergunta, op, correta, explicacao, grafico="";
+
+// PORTUGUÊS
+if(materia=="portugues"){
+pergunta="Na frase 'Ele é uma fera estudando', o sentido é:";
+op=["Real","Figurado","Formal","Informal"];
+correta=1;
+explicacao="A palavra 'fera' não é um animal aqui. Quer dizer que ele é muito bom!";
+}
+
+// MATEMÁTICA
+if(materia=="matematica"){
+let a=rand(20), b=rand(20);
+let r=a+b;
+
+pergunta=`Quanto é ${a} + ${b}?`;
+op=[r-1,r,r+1,r+2];
+correta=1;
+
+explicacao=`Somando: ${a} + ${b} = ${r}.`;
+
+// gráfico real
+if(rand(2)==0){
+grafico=`<canvas id="grafico"></canvas>`;
+setTimeout(()=>{
+let ctx=document.getElementById("grafico").getContext("2d");
+new Chart(ctx,{
+type:'bar',
+data:{
+labels:["A","B","C"],
+datasets:[{data:[5,10,3]}]
+}
+});
+},100);
+}
+}
+
+// CIÊNCIAS
+if(materia=="ciencias"){
+pergunta="A rotação da Terra causa:";
+op=["Dia e noite","Chuva","Vento","Lua"];
+correta=0;
+explicacao="A Terra gira e por isso temos dia e noite!";
+}
+
+// HISTÓRIA
+if(materia=="historia"){
+pergunta="Os povos nômades:";
+op=["Mudam de lugar","Vivem em cidade","Plantam sempre","Não viajam"];
+correta=0;
+explicacao="Eles mudavam de lugar sempre buscando comida.";
+}
+
+// GEOGRAFIA
+if(materia=="geografia"){
+pergunta="Desigualdade territorial é:";
+op=["Diferença entre regiões","Igualdade","Clima","Solo"];
+correta=0;
+explicacao="Alguns lugares são mais ricos que outros.";
+}
+
+let html = `<div class="question">
+<h3>${pergunta}</h3>
+${grafico}
+`;
+
+op.forEach((o,i)=>{
+html += `<button onclick="responder(${i},${correta},'${explicacao}')">${o}</button>`;
+});
+
+html += `<div id="explicacao" class="explicacao"></div></div>`;
+
+document.getElementById("area").innerHTML = html;
+}
+
+function responder(i, correta, explicacao){
+
+let div = document.getElementById("explicacao");
+
+if(i==correta){
+div.innerHTML = "✅ Acertou! " + explicacao;
+div.className="explicacao certo";
+}else{
+div.innerHTML = "❌ Errou! " + explicacao;
+div.className="explicacao erro";
+}
+
+}
+
+</script>
+
+</body>
+</html>
