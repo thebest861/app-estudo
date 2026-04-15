@@ -1,119 +1,116 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>App de Estudos</title>
-
-<style>
-body {
-    font-family: Arial;
-    background: linear-gradient(to right, #38bdf8, #22c55e);
-    padding: 20px;
-    text-align: center;
-}
-
-.container {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    max-width: 600px;
-    margin: auto;
-}
-
-button {
-    margin-top: 10px;
-    padding: 12px;
-    width: 100%;
-    font-size: 16px;
-    background: #22c55e;
-    border: none;
-    color: white;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #16a34a;
-}
-
-.question {
-    margin-top: 20px;
-}
-
-.explicacao {
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-.erro {
-    color: red;
-}
-
-.certo {
-    color: green;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h2>📚 App de Estudo</h2>
-
-<select id="materia">
-<option value="todos">Todas matérias</option>
-<option value="portugues">Português</option>
-<option value="matematica">Matemática</option>
-<option value="ciencias">Ciências</option>
-<option value="historia">História</option>
-<option value="geografia">Geografia</option>
-</select>
-
-<button onclick="gerar()">Nova Questão</button>
-
-<div id="area"></div>
-
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 
+let erros = {
+portugues:0,
+matematica:0,
+ciencias:0,
+historia:0,
+geografia:0
+};
+
 function rand(max){ return Math.floor(Math.random()*max); }
 
+// 🎯 CARREGAR ASSUNTOS
+function carregarAssuntos(){
+
+let materia = document.getElementById("materia").value;
+let assunto = document.getElementById("assunto");
+
+let lista = [];
+
+if(materia=="portugues"){
+lista = ["sentido","substantivo","concordancia"];
+}
+
+if(materia=="matematica"){
+lista = ["soma","subtracao","grafico","plano"];
+}
+
+if(materia=="ciencias"){
+lista = ["terra","lua","optica"];
+}
+
+if(materia=="historia"){
+lista = ["nomadismo","estado"];
+}
+
+if(materia=="geografia"){
+lista = ["populacao","desigualdade"];
+}
+
+assunto.innerHTML = "";
+
+lista.forEach(a=>{
+assunto.innerHTML += `<option value="${a}">${a}</option>`;
+});
+
+}
+
+// 🎮 GERAR QUESTÃO
 function gerar(){
 
-let materias = ["portugues","matematica","ciencias","historia","geografia"];
-let escolha = document.getElementById("materia").value;
-
-let materia = escolha=="todos" ? materias[rand(materias.length)] : escolha;
+let materia = document.getElementById("materia").value;
+let assunto = document.getElementById("assunto").value;
 
 let pergunta, op, correta, explicacao, grafico="";
 
 // PORTUGUÊS
 if(materia=="portugues"){
+
+if(assunto=="sentido"){
 pergunta="Na frase 'Ele é uma fera estudando', o sentido é:";
 op=["Real","Figurado","Formal","Informal"];
 correta=1;
-explicacao="A palavra 'fera' não é um animal aqui. Quer dizer que ele é muito bom!";
+explicacao="Fera aqui quer dizer muito bom!";
+}
+
+if(assunto=="substantivo"){
+pergunta="Qual é substantivo?";
+op=["Correr","Casa","Bonito","Rápido"];
+correta=1;
+explicacao="Casa é nome de coisa.";
+}
+
+if(assunto=="concordancia"){
+pergunta="Qual está correto?";
+op=["Os menino feliz","Os meninos felizes","Menino felizes","Os menino felizs"];
+correta=1;
+explicacao="Plural combina com plural.";
+}
+
 }
 
 // MATEMÁTICA
 if(materia=="matematica"){
+
+if(assunto=="soma"){
 let a=rand(20), b=rand(20);
 let r=a+b;
-
-pergunta=`Quanto é ${a} + ${b}?`;
+pergunta=`${a} + ${b} = ?`;
 op=[r-1,r,r+1,r+2];
 correta=1;
+explicacao=`${a}+${b}=${r}`;
+}
 
-explicacao=`Somando: ${a} + ${b} = ${r}.`;
+if(assunto=="subtracao"){
+let a=rand(20), b=rand(10);
+let r=a-b;
+pergunta=`${a} - ${b} = ?`;
+op=[r-1,r,r+1,r+2];
+correta=1;
+explicacao=`${a}-${b}=${r}`;
+}
 
-// gráfico real
-if(rand(2)==0){
+if(assunto=="grafico"){
+pergunta="Qual barra é maior?";
+op=["Azul","Verde","Vermelha","Amarela"];
+correta=1;
+explicacao="Verde é maior.";
+
 grafico=`<canvas id="grafico"></canvas>`;
+
 setTimeout(()=>{
 let ctx=document.getElementById("grafico").getContext("2d");
 new Chart(ctx,{
@@ -125,61 +122,102 @@ datasets:[{data:[5,10,3]}]
 });
 },100);
 }
+
+if(assunto=="plano"){
+pergunta="Qual quadrante?";
+op=["1º","2º","3º","4º"];
+correta=0;
+explicacao="Direita e cima = 1º.";
+
+grafico=`
+<svg width="200" height="200">
+<line x1="100" y1="0" x2="100" y2="200" stroke="black"/>
+<line x1="0" y1="100" x2="200" y2="100" stroke="black"/>
+<circle cx="150" cy="50" r="5" fill="red"/>
+</svg>`;
 }
 
-// CIÊNCIAS
+}
+
+// OUTRAS MATÉRIAS SIMPLES
 if(materia=="ciencias"){
-pergunta="A rotação da Terra causa:";
+pergunta="A Terra gira e causa:";
 op=["Dia e noite","Chuva","Vento","Lua"];
 correta=0;
-explicacao="A Terra gira e por isso temos dia e noite!";
+explicacao="Giro da Terra = dia/noite.";
 }
 
-// HISTÓRIA
 if(materia=="historia"){
-pergunta="Os povos nômades:";
-op=["Mudam de lugar","Vivem em cidade","Plantam sempre","Não viajam"];
+pergunta="Nômades:";
+op=["Mudam de lugar","Cidade","Estado","Indústria"];
 correta=0;
-explicacao="Eles mudavam de lugar sempre buscando comida.";
+explicacao="Eles se movem.";
 }
 
-// GEOGRAFIA
 if(materia=="geografia"){
-pergunta="Desigualdade territorial é:";
-op=["Diferença entre regiões","Igualdade","Clima","Solo"];
+pergunta="Desigualdade é:";
+op=["Diferença","Igualdade","Clima","Solo"];
 correta=0;
-explicacao="Alguns lugares são mais ricos que outros.";
+explicacao="São diferenças.";
 }
 
+// MOSTRAR
 let html = `<div class="question">
 <h3>${pergunta}</h3>
 ${grafico}
 `;
 
 op.forEach((o,i)=>{
-html += `<button onclick="responder(${i},${correta},'${explicacao}')">${o}</button>`;
+html += `<button onclick="responder(${i},${correta},'${explicacao}','${materia}')">${o}</button>`;
 });
 
-html += `<div id="explicacao" class="explicacao"></div></div>`;
+html += `<div id="exp"></div></div>`;
 
 document.getElementById("area").innerHTML = html;
 }
 
-function responder(i, correta, explicacao){
+// 🧠 TREINO INTELIGENTE
+function responder(i, correta, explicacao, materia){
 
-let div = document.getElementById("explicacao");
+let exp = document.getElementById("exp");
 
 if(i==correta){
-div.innerHTML = "✅ Acertou! " + explicacao;
-div.className="explicacao certo";
+exp.innerHTML="✅ Acertou!";
+exp.style.color="green";
 }else{
-div.innerHTML = "❌ Errou! " + explicacao;
-div.className="explicacao erro";
+exp.innerHTML="❌ Errou! " + explicacao;
+exp.style.color="red";
+
+erros[materia]++;
 }
 
+mostrarRelatorio();
+
+setTimeout(gerar,2000);
+}
+
+// 📊 RELATÓRIO
+function mostrarRelatorio(){
+
+let ctx = document.getElementById("graficoErros");
+
+if(!ctx) return;
+
+new Chart(ctx,{
+type:'bar',
+data:{
+labels:["Port","Mat","Cien","Hist","Geo"],
+datasets:[{
+data:[
+erros.portugues,
+erros.matematica,
+erros.ciencias,
+erros.historia,
+erros.geografia
+]
+}]
+}
+});
 }
 
 </script>
-
-</body>
-</html>
