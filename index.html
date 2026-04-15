@@ -38,7 +38,7 @@ button{
 
 <div class="container">
 
-<h2>📚 App Infinito</h2>
+<h2>📚 App Inteligente</h2>
 
 <select id="materia">
 <option value="portugues">Português</option>
@@ -56,6 +56,7 @@ button{
 
 <script>
 
+// 🔊 VOZ
 function falar(txt){
 let msg = new SpeechSynthesisUtterance(txt);
 msg.lang="pt-BR";
@@ -74,76 +75,91 @@ let j=Math.floor(Math.random()*(i+1));
 return arr;
 }
 
-// 🔥 GERADOR INTELIGENTE
+// GERADOR INTELIGENTE
 function gerarQuestao(materia){
 
 let pergunta, alternativas, correta, explicacao;
 
-// MATEMÁTICA (NUNCA REPETE)
+// MATEMÁTICA (INFINITO REAL)
 if(materia==="matematica"){
 
 let a = rand(100);
 let b = rand(100);
-let op = rand(2);
 
-if(op===0){
+if(rand(2)==0){
 let r=a+b;
 pergunta=`${a} + ${b} = ?`;
 alternativas=[r,r+1,r-1,r+2];
 correta=0;
 explicacao=`${a} + ${b} = ${r}`;
-}
-
-if(op===1){
+}else{
 let r=a-b;
 pergunta=`${a} - ${b} = ?`;
 alternativas=[r,r+1,r-1,r+2];
 correta=0;
 explicacao=`${a} - ${b} = ${r}`;
 }
+
 }
 
-// PORTUGUÊS (VARIA FRASES)
+// PORTUGUÊS (VARIAÇÃO REAL)
 if(materia==="portugues"){
 
 let frases=[
 "Ele é uma fera estudando",
 "Ela voa nos estudos",
 "Ele é um gênio",
-"Ela manda bem demais",
+"Ela manda muito bem",
 "Ele estuda como máquina"
 ];
 
 let f = frases[rand(frases.length)];
 
+let tipo = rand(3);
+
+if(tipo==0){
 pergunta=`Na frase "${f}", o sentido é:`;
 alternativas=["Real","Figurado","Formal","Informal"];
 correta=1;
-explicacao="Não é literal, quer dizer muito bom.";
+explicacao="Quer dizer que ele é muito bom.";
 }
 
-// CIÊNCIAS
+if(tipo==1){
+pergunta="Qual é um substantivo?";
+alternativas=["Correr","Casa","Bonito","Rápido"];
+correta=1;
+explicacao="Substantivo é nome.";
+}
+
+if(tipo==2){
+pergunta="Qual está correto?";
+alternativas=["Os menino feliz","Os meninos felizes","Menino felizes","Os menino felizs"];
+correta=1;
+explicacao="Plural combina com plural.";
+}
+
+}
+
+// OUTRAS MATÉRIAS
 if(materia==="ciencias"){
-pergunta="A Terra gira e isso causa:";
+pergunta="A Terra gira e causa:";
 alternativas=["Dia e noite","Chuva","Vento","Lua"];
 correta=0;
-explicacao="A rotação da Terra causa dia e noite.";
+explicacao="A rotação causa dia e noite.";
 }
 
-// HISTÓRIA
 if(materia==="historia"){
 pergunta="Os povos nômades:";
 alternativas=["Mudam de lugar","Cidade","Estado","Indústria"];
 correta=0;
-explicacao="Eles se moviam sempre.";
+explicacao="Eles se moviam.";
 }
 
-// GEOGRAFIA
 if(materia==="geografia"){
 pergunta="Desigualdade territorial é:";
 alternativas=["Diferença","Igualdade","Clima","Solo"];
 correta=0;
-explicacao="São diferenças entre regiões.";
+explicacao="São diferenças.";
 }
 
 // EMBARALHAR
