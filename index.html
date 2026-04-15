@@ -1,86 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>App Estudo Infinito</title>
-
-<style>
-body{
-    font-family: Arial;
-    background: linear-gradient(135deg,#3b82f6,#22c55e);
-    padding:20px;
-}
-.container{
-    max-width:700px;
-    margin:auto;
-    background:white;
-    padding:20px;
-    border-radius:20px;
-}
-button, select{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:10px;
-}
-button{
-    background:#22c55e;
-    color:white;
-}
-.questao{
-    margin-top:15px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<h2>📚 App Inteligente</h2>
-
-<select id="materia">
-<option value="portugues">Português</option>
-<option value="matematica">Matemática</option>
-<option value="ciencias">Ciências</option>
-<option value="historia">História</option>
-<option value="geografia">Geografia</option>
-</select>
-
-<button onclick="gerarProva()">Gerar 10 Questões</button>
-
-<div id="area"></div>
-
-</div>
-
-<script>
-
-// 🔊 VOZ
-function falar(txt){
-let msg = new SpeechSynthesisUtterance(txt);
-msg.lang="pt-BR";
-speechSynthesis.speak(msg);
-}
-
-function rand(max){
-return Math.floor(Math.random()*max);
-}
-
-function embaralhar(arr){
-for(let i=arr.length-1;i>0;i--){
-let j=Math.floor(Math.random()*(i+1));
-[arr[i],arr[j]]=[arr[j],arr[i]];
-}
-return arr;
-}
-
-// GERADOR INTELIGENTE
 function gerarQuestao(materia){
 
 let pergunta, alternativas, correta, explicacao;
 
-// MATEMÁTICA (INFINITO REAL)
+function rand(max){ return Math.floor(Math.random()*max); }
+
+// ===================== MATEMÁTICA =====================
 if(materia==="matematica"){
 
 let a = rand(100);
@@ -102,67 +26,147 @@ explicacao=`${a} - ${b} = ${r}`;
 
 }
 
-// PORTUGUÊS (VARIAÇÃO REAL)
+// ===================== PORTUGUÊS =====================
 if(materia==="portugues"){
 
-let frases=[
-"Ele é uma fera estudando",
-"Ela voa nos estudos",
-"Ele é um gênio",
-"Ela manda muito bem",
-"Ele estuda como máquina"
-];
-
-let f = frases[rand(frases.length)];
+let nomes=["João","Maria","Pedro","Ana","Lucas","Julia"];
+let coisas=["fera","gênio","máquina","craque"];
 
 let tipo = rand(3);
 
+// SENTIDO FIGURADO
 if(tipo==0){
-pergunta=`Na frase "${f}", o sentido é:`;
+let n = nomes[rand(nomes.length)];
+let c = coisas[rand(coisas.length)];
+
+pergunta=`Na frase "${n} é um ${c} estudando", o sentido é:`;
 alternativas=["Real","Figurado","Formal","Informal"];
 correta=1;
-explicacao="Quer dizer que ele é muito bom.";
+explicacao="Não é literal, quer dizer que ele é muito bom.";
 }
 
+// SUBSTANTIVO
 if(tipo==1){
+let objetos=["Casa","Carro","Escola","Livro"];
+let erradas=["Correr","Bonito","Rápido"];
+
+let certo = objetos[rand(objetos.length)];
+
 pergunta="Qual é um substantivo?";
-alternativas=["Correr","Casa","Bonito","Rápido"];
-correta=1;
-explicacao="Substantivo é nome.";
+alternativas=[certo,...erradas];
+correta=0;
+explicacao="Substantivo é nome de coisa ou lugar.";
 }
 
+// CONCORDÂNCIA
 if(tipo==2){
-pergunta="Qual está correto?";
-alternativas=["Os menino feliz","Os meninos felizes","Menino felizes","Os menino felizs"];
-correta=1;
-explicacao="Plural combina com plural.";
+let plural=["Os meninos felizes","As meninas bonitas"];
+let errado=["Os menino feliz","As menina bonita"];
+
+let certo = plural[rand(plural.length)];
+
+pergunta="Qual frase está correta?";
+alternativas=[certo,...errado];
+correta=0;
+explicacao="Plural deve combinar com plural.";
 }
 
 }
 
-// OUTRAS MATÉRIAS
+// ===================== CIÊNCIAS =====================
 if(materia==="ciencias"){
-pergunta="A Terra gira e causa:";
+
+let tipo = rand(3);
+
+// DIA E NOITE
+if(tipo==0){
+pergunta="O movimento da Terra causa:";
 alternativas=["Dia e noite","Chuva","Vento","Lua"];
 correta=0;
-explicacao="A rotação causa dia e noite.";
+explicacao="A Terra gira e temos dia e noite.";
 }
 
+// LUA
+if(tipo==1){
+pergunta="A Lua muda de forma porque:";
+alternativas=["Fases da Lua","Vento","Chuva","Sol some"];
+correta=0;
+explicacao="A Lua tem fases.";
+}
+
+// ÓPTICA
+if(tipo==2){
+pergunta="Lupa serve para:";
+alternativas=["Ampliar","Esfriar","Aquecer","Medir"];
+correta=0;
+explicacao="A lupa aumenta o tamanho.";
+}
+
+}
+
+// ===================== HISTÓRIA =====================
 if(materia==="historia"){
+
+let tipo = rand(3);
+
+// NOMADISMO
+if(tipo==0){
 pergunta="Os povos nômades:";
-alternativas=["Mudam de lugar","Cidade","Estado","Indústria"];
+alternativas=["Mudam de lugar","Vivem em cidade","Plantam sempre","Não saem"];
 correta=0;
-explicacao="Eles se moviam.";
+explicacao="Eles se moviam sempre.";
 }
 
+// SEDENTARISMO
+if(tipo==1){
+pergunta="Sedentários são pessoas que:";
+alternativas=["Ficam em um lugar","Viajam sempre","Só pescam","Só caçam"];
+correta=0;
+explicacao="Eles vivem em um local fixo.";
+}
+
+// CIDADES
+if(tipo==2){
+pergunta="As cidades surgiram porque:";
+alternativas=["As pessoas se fixaram","Choveu muito","Fugiram","Não plantavam"];
+correta=0;
+explicacao="As pessoas começaram a morar em um lugar.";
+}
+
+}
+
+// ===================== GEOGRAFIA =====================
 if(materia==="geografia"){
+
+let tipo = rand(3);
+
+// DESIGUALDADE
+if(tipo==0){
 pergunta="Desigualdade territorial é:";
-alternativas=["Diferença","Igualdade","Clima","Solo"];
+alternativas=["Diferença entre lugares","Igualdade","Clima","Solo"];
 correta=0;
-explicacao="São diferenças.";
+explicacao="Alguns lugares são mais ricos.";
 }
 
-// EMBARALHAR
+// POPULAÇÃO
+if(tipo==1){
+pergunta="População é:";
+alternativas=["Número de pessoas","Clima","Solo","Planta"];
+correta=0;
+explicacao="População é quantidade de pessoas.";
+}
+
+// REGIÕES
+if(tipo==2){
+pergunta="Região é:";
+alternativas=["Parte de um lugar","Cidade inteira","País todo","Rua"];
+correta=0;
+explicacao="Região é uma parte.";
+}
+
+}
+
+// 🔥 EMBARALHAR
 let op = alternativas.map((v,i)=>({txt:v,correta:i===correta}));
 op = embaralhar(op);
 
@@ -171,68 +175,3 @@ let novaCorreta = op.findIndex(x=>x.correta);
 return {pergunta,op,correta:novaCorreta,explicacao};
 
 }
-
-// GERAR PROVA
-let questoes=[];
-
-function gerarProva(){
-
-questoes=[];
-
-let materia=document.getElementById("materia").value;
-let html="";
-
-for(let i=1;i<=10;i++){
-
-let q = gerarQuestao(materia);
-questoes.push(q);
-
-html += `<div class="questao">
-<b>${i}. ${q.pergunta}</b><br>`;
-
-q.op.forEach((alt,index)=>{
-html += `<label>
-<input type="radio" name="q${i}" value="${index}"> ${alt.txt}
-</label><br>`;
-});
-
-html += `<div id="exp${i}"></div></div>`;
-}
-
-html += `<button onclick="corrigir()">Corrigir</button>`;
-
-document.getElementById("area").innerHTML=html;
-
-}
-
-// CORRIGIR
-function corrigir(){
-
-let acertos=0;
-
-for(let i=1;i<=10;i++){
-
-let marcada=document.querySelector(`input[name=q${i}]:checked`);
-let q=questoes[i-1];
-let exp=document.getElementById("exp"+i);
-
-if(marcada && parseInt(marcada.value)===q.correta){
-acertos++;
-exp.innerHTML="✅ Acertou";
-exp.style.color="green";
-}else{
-exp.innerHTML="❌ "+q.explicacao;
-exp.style.color="red";
-falar(q.explicacao);
-}
-
-}
-
-alert("Você acertou "+acertos+" de 10");
-
-}
-
-</script>
-
-</body>
-</html>
