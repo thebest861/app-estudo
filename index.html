@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>App Estudo Completo</title>
+<title>App de Estudos</title>
 
 <style>
 body{
@@ -47,7 +47,7 @@ button{
 
 <div class="container">
 
-<h2>📚 App de Estudo Completo</h2>
+<h2>📚 App de Estudo</h2>
 
 <select id="materia">
 <option value="portugues">Português</option>
@@ -67,99 +67,177 @@ button{
 
 // 🔊 VOZ
 function falar(txt){
-let msg = new SpeechSynthesisUtterance(txt);
-msg.lang="pt-BR";
-speechSynthesis.speak(msg);
+    let msg = new SpeechSynthesisUtterance(txt);
+    msg.lang = "pt-BR";
+    speechSynthesis.speak(msg);
 }
 
-// EMBARALHAR
+// 🔀 EMBARALHAR
 function embaralhar(arr){
-for(let i=arr.length-1;i>0;i--){
-let j=Math.floor(Math.random()*(i+1));
-[arr[i],arr[j]]=[arr[j],arr[i]];
+    for(let i=arr.length-1;i>0;i--){
+        let j=Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
 }
-return arr;
-}
 
-// BANCO DE QUESTÕES
-const banco = {
-
-portugues:[
-{p:"Na frase 'João é uma fera estudando', o sentido é:",o:["Real","Figurado","Formal","Informal"],c:1,e:"Fera quer dizer muito bom."},
-{p:"Qual é um substantivo?",o:["Correr","Casa","Bonito","Rápido"],c:1,e:"Substantivo é nome."},
-{p:"Qual é um adjetivo?",o:["Casa","Bonito","Correr","Mesa"],c:1,e:"Adjetivo é característica."},
-{p:"Qual frase está correta?",o:["Os menino feliz","Os meninos felizes","Menino felizes","Os menino felizs"],c:1,e:"Plural combina com plural."},
-{p:"Artigo é:",o:["Palavra que acompanha substantivo","Verbo","Número","Lugar"],c:0,e:"Artigo acompanha o substantivo."},
-{p:"Locução adjetiva é:",o:["Duas palavras com função de adjetivo","Verbo","Número","Nome"],c:0,e:"É conjunto com valor de adjetivo."}
-],
-
-ciencias:[
-{p:"A Terra gira e causa:",o:["Dia e noite","Chuva","Vento","Lua"],c:0,e:"Rotação gera dia e noite."},
-{p:"A Lua tem:",o:["Fases","Chuva","Vento","Raio"],c:0,e:"A Lua tem fases."},
-{p:"Lupa serve para:",o:["Ampliar","Esfriar","Aquecer","Medir"],c:0,e:"A lupa aumenta."},
-{p:"Telescópio serve para:",o:["Ver longe","Esquentar","Cortar","Medir"],c:0,e:"Serve para ver longe."}
-],
-
-historia:[
-{p:"Nômades:",o:["Mudam de lugar","Vivem fixos","Plantam","Pescam"],c:0,e:"Eles mudavam sempre."},
-{p:"Sedentários:",o:["Ficam em um lugar","Viajam","Correm","Caçam"],c:0,e:"Eles vivem fixos."},
-{p:"Cidades surgiram quando:",o:["Pessoas se fixaram","Choveu","Fugiram","Sumiram"],c:0,e:"As pessoas passaram a morar."}
-],
-
-geografia:[
-{p:"População é:",o:["Número de pessoas","Solo","Clima","Planta"],c:0,e:"População é quantidade de pessoas."},
-{p:"Região é:",o:["Parte de um lugar","Rua","Casa","Cidade"],c:0,e:"Região é uma parte."},
-{p:"Desigualdade é:",o:["Diferença","Igualdade","Solo","Planta"],c:0,e:"São diferenças."}
-]
-
-};
-
-// GERADOR
+// 🎯 GERADOR DE QUESTÕES
 function gerarQuestao(materia){
 
 function rand(max){ return Math.floor(Math.random()*max); }
 
 let pergunta, alternativas, correta, explicacao;
 
-// MATEMÁTICA (INFINITO)
+// ===== MATEMÁTICA (INFINITA) =====
 if(materia==="matematica"){
-let a = rand(100);
-let b = rand(100);
 
-if(rand(2)==0){
-let r=a+b;
-pergunta=`${a} + ${b} = ?`;
-alternativas=[r,r+1,r-1,r+2];
-correta=0;
-explicacao=`${a} + ${b} = ${r}`;
-}else{
-let r=a-b;
-pergunta=`${a} - ${b} = ?`;
-alternativas=[r,r+1,r-1,r+2];
-correta=0;
-explicacao=`${a} - ${b} = ${r}`;
-}
-}
-else{
-let lista = banco[materia];
-let q = lista[rand(lista.length)];
-pergunta=q.p;
-alternativas=q.o;
-correta=q.c;
-explicacao=q.e;
+    let a = rand(100);
+    let b = rand(100);
+
+    if(rand(2)==0){
+        let r = a + b;
+        pergunta = `${a} + ${b} = ?`;
+        alternativas = [r, r+1, r-1, r+2];
+        correta = 0;
+        explicacao = `${a} + ${b} = ${r}`;
+    } else {
+        let r = a - b;
+        pergunta = `${a} - ${b} = ?`;
+        alternativas = [r, r+1, r-1, r+2];
+        correta = 0;
+        explicacao = `${a} - ${b} = ${r}`;
+    }
 }
 
-// EMBARALHAR
+// ===== PORTUGUÊS =====
+if(materia==="portugues"){
+
+    let nomes = ["João","Maria","Pedro","Ana","Lucas","Julia"];
+    let coisas = ["fera","gênio","máquina","craque"];
+
+    let tipo = rand(3);
+
+    if(tipo==0){
+        let n = nomes[rand(nomes.length)];
+        let c = coisas[rand(coisas.length)];
+        pergunta = `Na frase "${n} é um ${c} estudando", o sentido é:`;
+        alternativas = ["Real","Figurado","Formal","Informal"];
+        correta = 1;
+        explicacao = "Quer dizer que ele é muito bom.";
+    }
+
+    if(tipo==1){
+        pergunta = "Qual é um substantivo?";
+        alternativas = ["Correr","Casa","Bonito","Rápido"];
+        correta = 1;
+        explicacao = "Substantivo é nome.";
+    }
+
+    if(tipo==2){
+        pergunta = "Qual frase está correta?";
+        alternativas = ["Os menino feliz","Os meninos felizes","Menino felizes","Os menino felizs"];
+        correta = 1;
+        explicacao = "Plural combina com plural.";
+    }
+}
+
+// ===== CIÊNCIAS =====
+if(materia==="ciencias"){
+
+    let tipo = rand(3);
+
+    if(tipo==0){
+        pergunta = "A rotação da Terra causa:";
+        alternativas = ["Dia e noite","Chuva","Vento","Lua"];
+        correta = 0;
+        explicacao = "A Terra gira e temos dia e noite.";
+    }
+
+    if(tipo==1){
+        pergunta = "A Lua muda de forma porque:";
+        alternativas = ["Fases da Lua","Vento","Chuva","Sol"];
+        correta = 0;
+        explicacao = "A Lua tem fases.";
+    }
+
+    if(tipo==2){
+        pergunta = "A lupa serve para:";
+        alternativas = ["Ampliar","Esfriar","Aquecer","Medir"];
+        correta = 0;
+        explicacao = "A lupa aumenta o tamanho.";
+    }
+}
+
+// ===== HISTÓRIA =====
+if(materia==="historia"){
+
+    let tipo = rand(3);
+
+    if(tipo==0){
+        pergunta = "Os povos nômades:";
+        alternativas = ["Mudam de lugar","Vivem fixos","Plantam","Pescam"];
+        correta = 0;
+        explicacao = "Eles mudavam sempre.";
+    }
+
+    if(tipo==1){
+        pergunta = "Sedentários são:";
+        alternativas = ["Ficam em um lugar","Viajam","Correm","Caçam"];
+        correta = 0;
+        explicacao = "Vivem fixos.";
+    }
+
+    if(tipo==2){
+        pergunta = "As cidades surgiram quando:";
+        alternativas = ["Pessoas se fixaram","Choveu","Fugiram","Sumiram"];
+        correta = 0;
+        explicacao = "As pessoas passaram a morar.";
+    }
+}
+
+// ===== GEOGRAFIA =====
+if(materia==="geografia"){
+
+    let tipo = rand(3);
+
+    if(tipo==0){
+        pergunta = "Desigualdade territorial é:";
+        alternativas = ["Diferença","Igualdade","Clima","Solo"];
+        correta = 0;
+        explicacao = "São diferenças entre regiões.";
+    }
+
+    if(tipo==1){
+        pergunta = "População é:";
+        alternativas = ["Número de pessoas","Solo","Clima","Planta"];
+        correta = 0;
+        explicacao = "População é quantidade de pessoas.";
+    }
+
+    if(tipo==2){
+        pergunta = "Região é:";
+        alternativas = ["Parte de um lugar","Rua","Casa","Cidade"];
+        correta = 0;
+        explicacao = "Região é uma parte.";
+    }
+}
+
+// 🔀 EMBARALHAR
 let op = alternativas.map((v,i)=>({txt:v,correta:i===correta}));
 op = embaralhar(op);
 
 let novaCorreta = op.findIndex(x=>x.correta);
 
-return {pergunta,op,correta:novaCorreta,explicacao};
+return {
+    pergunta,
+    op,
+    correta:novaCorreta,
+    explicacao
+};
 
 }
 
-// GERAR PROVA
+// 🧪 GERAR PROVA
 let questoes=[];
 
 function gerarProva(){
@@ -192,7 +270,7 @@ document.getElementById("area").innerHTML=html;
 
 }
 
-// CORRIGIR
+// ✅ CORRIGIR
 function corrigir(){
 
 let acertos=0;
